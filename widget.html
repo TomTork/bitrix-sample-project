@@ -1,1 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Простой виджет для сделки</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 15px;
+            margin: 0;
+            background-color: #f5f7f8;
+        }
+        .widget-container {
+            background: white;
+            border-radius: 6px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h3 {
+            color: #2067B0;
+            margin-top: 0;
+        }
+        button {
+            background-color: #2067B0;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #164b80;
+        }
+    </style>
+</head>
+<body>
+    <div class="widget-container">
+        <h3>Информация о сделке</h3>
+        <p>ID текущей сделки: <strong id="dealId">загрузка...</strong></p>
+        <button onclick="BX24.close()">Закрыть</button>
+    </div>
 
+    <script src="//api.bitrix24.com/api/v1/"></script>
+    <script>
+        BX24.init(function() {
+            // Получаем контекст текущей сделки
+            BX24.getContext().then(function(context) {
+                if (context.ENTITY_ID) {
+                    document.getElementById('dealId').textContent = context.ENTITY_ID;
+                    
+                    // Дополнительно: можно получить другие данные о сделке
+                    // BX24.callMethod('crm.deal.get', { id: context.ENTITY_ID })
+                    //     .then(function(result) {
+                    //         console.log('Данные сделки:', result.data());
+                    //     });
+                } else {
+                    document.getElementById('dealId').textContent = 'не удалось получить ID';
+                }
+            }).catch(function(error) {
+                document.getElementById('dealId').textContent = 'ошибка загрузки';
+                console.error('Ошибка:', error);
+            });
+        });
+    </script>
+</body>
+</html>
